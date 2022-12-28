@@ -3,7 +3,7 @@ import CartManager from '../CartManager.js';
 
 const cartsRoutes = Router();
 
-let cartManager = new CartManager('./src/data/carrito.json');
+let cartManager = new CartManager('./src/data/carts.json');
 
 // CREATE CART 
 cartsRoutes.post('', async (req, res) => {
