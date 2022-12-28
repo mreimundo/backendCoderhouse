@@ -4,7 +4,7 @@ import { uploader } from "../utils.js";
 
 const productsRoutes = Router();
 
-let productManager = new ProductManager('./src/data/products.json');
+let productManager = new ProductManager('./src/data/productos.json');
 
 // CREATE PRODUCT 
 productsRoutes.post('', uploader.array('thumbnail'), async (req, res) => {

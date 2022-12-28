@@ -2,7 +2,7 @@ import { writeFile, readFile } from 'fs/promises';
 import { existsSync } from 'fs';
 import ProductManager from './ProductManager.js';
 
-let productManager = new ProductManager('./src/data/products.json');
+let productManager = new ProductManager('./src/data/productos.json');
 
 class CartManager {
     constructor(path) {
