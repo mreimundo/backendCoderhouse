@@ -52,7 +52,7 @@ class ProductManager {
                 id: newId,
                 status: product.status === 'on',
                 thumbnails: product.thumbnails || [],
-                havePics: product.thumbnails.length > 0,
+                images: product.thumbnails.length > 0,
                 ...product
             }
             savedProducts.push(newProduct)
