@@ -19,17 +19,12 @@ app.use('/', viewsRoutes)
 
 
 const httpServer = app.listen(PORT, ()=>{
-    console.log('Funcionando en puerto => ', PORT)
+    console.log('Listening on port => ', PORT)
 })
 
 const socketServer = new Server(httpServer) 
 
 socketServer.on('connection', socket => {
-    console.log("Nuevo cliente conectado")
+    console.log('Nuevo cliente conectado')
     app.set('socket', socket)
-    socket.on('message', data => console.log(data))
-    
-    /*socket.emit('mensaje_solo_para_este', 'Comunicación solo para el socket')
-    socket.broadcast.emit('mensaje_para_todos_menos_este', 'Comunicación para todos menos el actual')
-    socketServer.emit('mensaje_para_todos', 'Este evento lo reciben todos los sockets conectados')*/
 })

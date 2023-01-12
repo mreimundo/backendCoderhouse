@@ -1,0 +1,70 @@
+[
+	{
+		"id": 1,
+		"title": "Avena Quaker",
+		"description": "Avena 1kg",
+		"code": "1",
+		"price": "500",
+		"stock": "100",
+		"status": "on",
+		"category": "cereal",
+		"images": true,
+		"thumbnails": [
+			{
+				"path": "C:\\Users\\ASUS\\Desktop\\martin\\Coderhouse\\Backend\\backendCoderhouse\\public\\img\\bolsa_avena_3d_nuevo_visual.jpg",
+				"originalName": "bolsa_avena_3d_nuevo_visual.jpg"
+			}
+		]
+	},
+	{
+		"id": 2,
+		"title": "Dulce de leche LA SERENISIMA",
+		"description": "Dulce de leche LA SERENISIMA 400gr",
+		"code": "2",
+		"price": "400",
+		"stock": "150",
+		"status": "on",
+		"category": "lacteo",
+		"images": true,
+		"thumbnails": [
+			{
+				"path": "C:\\Users\\ASUS\\Desktop\\martin\\Coderhouse\\Backend\\backendCoderhouse\\public\\img\\ddl.jpg",
+				"originalName": "ddl.jpg"
+			}
+		]
+	},
+	{
+		"id": 3,
+		"title": "Yerba playadito",
+		"description": "Playadito 1kg elaborada con palo",
+		"code": "3",
+		"price": "600",
+		"stock": "50",
+		"status": "on",
+		"category": "yerba",
+		"images": true,
+		"thumbnails": [
+			{
+				"path": "C:\\Users\\ASUS\\Desktop\\martin\\Coderhouse\\Backend\\backendCoderhouse\\public\\img\\yerba-mate-playadito-x-1kg.jpg",
+				"originalName": "yerba-mate-playadito-x-1kg.jpg"
+			}
+		]
+	},
+	{
+		"id": 4,
+		"title": "Mermelada",
+		"description": "Mermelada 400g",
+		"code": "4",
+		"price": "450",
+		"stock": "80",
+		"status": "on",
+		"category": "mermelada",
+		"images": true,
+		"thumbnails": [
+			{
+				"path": "C:\\Users\\ASUS\\Desktop\\martin\\Coderhouse\\Backend\\backendCoderhouse\\public\\img\\mermelada.jpg",
+				"originalName": "mermelada.jpg"
+			}
+		]
+	}
+]

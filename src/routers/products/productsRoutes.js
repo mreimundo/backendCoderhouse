@@ -2,64 +2,92 @@ const { Router } = require('express')
 const uploader = require('../../utils')
 const ProductManager = require('../../managers/ProductManager')
 
-const productsRoutes = Router()
+const router = Router()
 
-let productManager = new ProductManager('./src/data/products.json')
+const productManager = new ProductManager('./products.json')
 
-// Crear producto
-productsRoutes.post('', uploader.array('thumbnail'), async (req, res) => {
-    let product = req.body
-    let thumbnail = req.files ? (req.files.map(file => `/img/${file.originalname}`)) : []
-    let statusProduct = (product.status) ? product.status.toLowerCase()==="true"? true:false : true
-    let productJson = { 
-    ...product, 
-    thumbnail: thumbnail, 
-    price: +(product.price), 
-    stock: +(product.stock),
-    status: statusProduct
-}
-    let newProduct = await productManager.addProduct(productJson)
-    let status = newProduct.includes("is load") ? "success" : "error";
-    res.send({ status: status, message: newProduct })
-});
-// Leer y obtener producto
-productsRoutes.get('', async (req, res) => {
-    let products = await productManager.getProducts()
-    let limit = req.query.limit;
-    if (!limit) return res.send({ status: "success", payload: products })
-    let productLimit = products.filter((product, indice) => indice < limit)
-    res.send({ status: "success", payload: productLimit })
-
+router.get('/', async (req, res)=>{
+    const products = await productManager.getProducts()
+    const limit = req.query.limit
+    if(!limit){
+        return res.send({
+            status: 'success',
+            data: products})
+    }
+    const limitedProducts = products.slice(0,limit)
+    res.send({
+        status: 'success',
+        data: limitedProducts
+    })
 })
-// Leer porducto por su id
-productsRoutes.get('/:pid', async (req, res) => {
-    let pid = +req.params.pid;
-    let product = await productManager.getProductById(pid)
-    let status = product.id > 0 ? "success" : "error"
-    res.send({ status: status, payload: product })
-});
-// Actualizar un producto segun su id
-productsRoutes.put('/:pid', uploader.array('thumbnail'), async (req, res) => {
-    let pid = +req.params.pid
-    let product = req.body
-    let productTarget = await productManager.getProductById(pid)
-    let price = (product.price) ? +(product.price) : productTarget.price;
-    let stock = (product.stock) ? +(product.stock) : productTarget.stock;
-    let statusProduct = (product.status) ? (product.status.toLowerCase()=="true")? true:false : productTarget.status
-    let thumbnailWhat = req.files[0] ? (req.files.map(file => `/img/${file.originalname}`)) : productTarget.thumbnail
-    let productJson = { ...product, thumbnail: thumbnailWhat, price: price, stock: stock, status: statusProduct }
-    let updateProduct = await productManager.updateProduct(pid, productJson)
-    let status = updateProduct.includes("updated product") ? "success" : "error"
-    res.send({ status: status, message: updateProduct })
-});
-// Eliminar producto
-productsRoutes.delete('/:pid', async (req, res) => {
-    let pid = +req.params.pid
 
-    let productDelete = await productManager.deleteProduct(pid);
-    let status = productDelete.includes("removed product") ? "success" : "error"
+router.get('/:pid', async (req, res)=>{
+    const id = Number(req.params.pid)
+    const product = await productManager.getProductById(id)
+    if(product.error){
+        return res.status(400).send({
+            error: product.error
+        })
+    }
+    res.send({product})
+})
 
-    res.send({ status: status, message: productDelete })
-});
+router.post('/', uploader.array('files'), async (req, res) =>{
+    const newProduct = req.body
+    if(req.files){
+        const paths = req.files.map(file => {
+            return {path: file.path,
+             originalName: file.originalname    
+            }
+        })
+        newProduct.thumbnails = paths
+    }
+    if(!Object.keys(newProduct).length){
+        return res.status(400).send('Error: Missing product')
+    }
+    const addProduct = await productManager.addProduct(newProduct)
+    if(addProduct.error){
+        return res.status(400).send({
+                error: addProduct.error
+            })
+    }
+    res.send({
+        status: 'success',
+        added: addProduct
+    })
+})
 
-module.exports = productsRoutes
+router.put('/:pid', async(req, res)=>{
+    const productId = Number(req.params.pid)
+    if(req.body.id){
+        return res.status(400).send({
+            error: "No id must be provided"
+        })
+    }
+    const updateProduct = await productManager.updateProduct(productId, req.body)
+    if(updateProduct.error){
+        return res.status(400).send({
+                    error: updateProduct.error
+                })
+    }
+    res.send({
+        status: 'success',
+        newProduct: updateProduct
+    })
+})
+
+router.delete('/:pid', async(req, res)=>{
+    const productId = Number(req.params.pid)
+    const deleteProduct = await productManager.deleteProduct(productId)
+    if(deleteProduct.error){
+        return res.status(400).send({
+            error: deleteProduct.error
+        })
+    }
+    res.send({
+        status: 'success',
+        deletedProduct: deleteProduct
+    })
+})
+
+module.exports = router

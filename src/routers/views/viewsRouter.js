@@ -4,7 +4,7 @@ const ProductManager = require('../../managers/ProductManager')
 
 const router = Router()
 
-const productManager = new ProductManager('./data/products.json')
+const productManager = new ProductManager('./products.json')
 
 router.get('/', async (req, res)=>{
     const products = await productManager.getProducts()

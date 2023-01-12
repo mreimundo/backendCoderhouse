@@ -1,0 +1,34 @@
+<div>
+    <h1 id="main-title">Productos</h1>
+    <div id="product-list-container">
+        {{#each products}}
+            <div id="product-item">
+                <p id="title">{{title}}</p>
+                <p>{{description}}</p>
+                {{#if images}}
+                    <div class="thumbnail-container">
+                        <img src="../../statics/img/{{thumbnails.0.originalName}}" alt="">
+                    </div>
+                {{else}}
+                    <p id="no-image">Sin imagen</p>
+                {{/if}}
+                <p>${{price}}</p>
+            </div>
+        {{/each}}
+    </div>
+    <form action="/updatedproducts" id="add-updatedproducts-form" class="add-product-form" method="post" enctype="multipart/form-data">
+        <h2>Agregar producto</h2>
+        <input type="text" placeholder="Titulo" name="title">
+        <input type="text" placeholder="Descripcion" name="description" required>
+        <input type="text" placeholder="Codigo" name="code" required>
+        <input type="number" placeholder="Precio" name="price" required>
+        <input type="number" placeholder="Stock" name="stock" required>
+        <input type="text" placeholder="Categoria" name="category" required>
+        <input type="file" name="files" multiple>
+        <div id="input-status"><label for="input-status"><input type="checkbox" name="status">Disponible</label></div>
+        <input type="submit" value="Enviar">
+    </form>
+</div>
+
+<script src="socket.io/socket.io.js"></script>
+<script src="statics/js/updatedProducts.js"></script>
