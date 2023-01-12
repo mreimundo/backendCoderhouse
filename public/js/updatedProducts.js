@@ -21,7 +21,6 @@ form.addEventListener('submit', event => {
 })
 
 socket.on('getProducts', data => {
-    console.log('probando 123' + data);
 })
 
 socket.on('newProduct', data => {
