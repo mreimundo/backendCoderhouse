@@ -1,8 +1,8 @@
-import { writeFile, readFile } from 'fs/promises';
-import { existsSync } from 'fs';
-import ProductManager from './ProductManager.js';
+const fs = require('fs/promises')
+const { existsSync } = require('fs')
+const ProductManager = require('./ProductManager')
 
-let productManager = new ProductManager('./src/data/products.json');
+let productManager = new ProductManager('./src/data/products.json')
 
 class CartManager {
     constructor(path) {
@@ -19,7 +19,7 @@ class CartManager {
             }
             savedCarts.push(newCart)
             const cartListString = JSON.stringify(savedCarts, null, '\t')
-            await writeFile(this.path, cartListString)
+            await fs.writeFile(this.path, cartListString)
             return `cart id: ${newId} is load`
         }
         catch (error) {
@@ -29,7 +29,7 @@ class CartManager {
     async getCarts() {
         try {
             if (existsSync(this.path)) {
-                const carts = await readFile(this.path, 'utf-8')
+                const carts = await fs.readFile(this.path, 'utf-8')
                 if (carts.length > 0) {
                     const parsedCarts = JSON.parse(carts)
                     return parsedCarts
@@ -84,7 +84,7 @@ class CartManager {
                     }
                 })
                 const cartListString = JSON.stringify(updatedList, null, '\t')
-                await writeFile(this.path, cartListString)
+                await fs.writeFile(this.path, cartListString)
                 return `product id: ${pid} add to cart id: ${targetCart.id} `
             }
         }
@@ -115,7 +115,7 @@ class CartManager {
                     }
                 })
                 const cartListString = JSON.stringify(updatedList, null, '\t')
-                await writeFile(this.path, cartListString)
+                await fs.writeFile(this.path, cartListString)
                 return `product id: ${pid} delete to cart id: ${targetCart.id} `
             }
         }
@@ -134,7 +134,7 @@ class CartManager {
             }
             else {
                 const cartListString = JSON.stringify(filteredList, null, '\t')
-                await writeFile(this.path, cartListString)
+                await fs.writeFile(this.path, cartListString)
                 return `removed cart id: ${targetCart.id} `
             }
         }
@@ -144,4 +144,4 @@ class CartManager {
     }
 }
 
-export default CartManager;
+module.exports = CartManager

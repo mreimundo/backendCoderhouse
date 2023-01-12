@@ -1,5 +1,5 @@
-import { writeFile, readFile } from 'fs/promises';
-import { existsSync } from 'fs';
+const fs = require('fs/promises')
+const { existsSync } = require('fs')
 
 class ProductManager {
     constructor(path) {
@@ -47,7 +47,7 @@ class ProductManager {
             }
             savedProducts.push(newProduct)
             const productListString = JSON.stringify(savedProducts, null, '\t')
-            await writeFile(this.path, productListString)
+            await fs.writeFile(this.path, productListString)
             return `product code: ${product.code} is load`
         }
         catch (error) {
@@ -58,7 +58,7 @@ class ProductManager {
     async getProducts() {
         try {
             if (existsSync(this.path)) {
-                const products = await readFile(this.path, 'utf-8')
+                const products = await fs.readFile(this.path, 'utf-8')
                 if (products.length > 0) {
                     const parsedProducts = JSON.parse(products)
                     return parsedProducts
@@ -122,7 +122,7 @@ class ProductManager {
                     }
                 })
                 const productListString = JSON.stringify(updatedList, null, '\t')
-                await writeFile(this.path, productListString)
+                await fs.writeFile(this.path, productListString)
                 return `updated product id: ${targetProduct.id} `
             }
         }
@@ -141,7 +141,7 @@ class ProductManager {
             }
             else {
                 const productListString = JSON.stringify(filteredList, null, '\t')
-                await writeFile(this.path, productListString)
+                await fs.writeFile(this.path, productListString)
                 return `removed product id: ${targetProduct.id} `
             }
         }
@@ -150,5 +150,4 @@ class ProductManager {
         }
     }
 }
-
-export default ProductManager;
+module.exports = ProductManager

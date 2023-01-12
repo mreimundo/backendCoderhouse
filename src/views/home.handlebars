@@ -1,0 +1,31 @@
+<div>
+    <h1>Products</h1>
+    <div id="product-list-container">
+        {{#each products}}
+            <div id="product-item">
+                <p id="title">{{title}}</p>
+                <p>{{description}}</p>
+                <p>${{price}}</p>
+                {{#if havePics}}
+                    <div class="thumbnail-container">
+                        <img src="../../statics/img/{{thumbnails.0.originalName}}" alt="">
+                    </div>
+                {{else}}
+                    <p id="no-image">no image</p>
+                {{/if}}
+            </div>
+        {{/each}}
+    </div>
+    <form action="/api/products" class="add-product-form" method="post" enctype="multipart/form-data">
+        <h2>Add product</h2>
+        <input type="text" placeholder="title" name="title">
+        <input type="text" placeholder="description" name="description">
+        <input type="text" placeholder="code" name="code">
+        <input type="number" placeholder="price" name="price">
+        <input type="number" placeholder="stock" name="stock">
+        <input type="text" placeholder="category" name="category">
+        <input type="file" name="files" multiple>
+        <label for="input-status"><input type="checkbox" name="status" id="input-status">Available</label>
+        <input type="submit" value="Send">
+    </form>
+</div>
