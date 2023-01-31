@@ -1,6 +1,6 @@
 const fs = require('fs/promises')
 const { existsSync } = require('fs');
-const { all } = require('../routers/appRouters');
+const { all } = require('../../routers/appRouters');
 
 class CartManager {
     constructor(path){
