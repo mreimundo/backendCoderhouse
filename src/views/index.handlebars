@@ -2,7 +2,7 @@
     <h1 class="main-title">Nuestros productos</h1>
     <div id="product-list-container">
         {{#each products}}
-            <div id="product-item">
+            <div class="product-item" id={{_id}} >
                 <p id="item-title">{{title}}</p>
                 <p>{{description}}</p>
                 <p class="price-tag">${{price}}</p>
@@ -14,6 +14,7 @@
                     <p id="no-image">no image</p>
                 {{/if}}
                 <p class="stock-tag">{{stock}} restantes</p>
+                <button id="add-to-cart-button" onclick="addToCart(event)">Add to cart</button>
             </div>
         {{/each}}
     </div>

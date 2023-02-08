@@ -42,7 +42,7 @@ router.post('/:cid/product/:pid', async(req,res)=>{
     try {
         const cartId = req.params.cid
         const productId = req.params.pid
-        const addProduct = await cartManagerMDB.addProduct(cartId, productId)
+        const addProduct = await cartManagerMDB.addProductToCart(cartId, productId)
         res.send({
             status: 'success',
             newCart: addProduct
@@ -61,6 +61,76 @@ router.post('/', async(req, res)=>{
         status: 'success',
         cart: addCart
     })
+})
+
+router.put('/:cid', async (req, res) =>{
+    const { cid } = req.params
+    const newProducts = req.body
+    try {
+        const updatedCart = await cartManagerMDB.updateProducts(cid, newProducts)
+        res.send({
+            status: 'success',
+            payload: updatedCart
+        })
+        
+    } catch (error) {
+        res.status(500).send({
+            status: "error",
+            error: error.message
+        })
+    }
+})
+
+router.put('/:cid/product/:pid', async(req,res)=>{
+    const {cid, pid} = req.params
+    const amount = req.body.quantity
+    try {
+        if(!amount){
+            throw new Error('an amount of product must be provided')
+        }
+        const updateProduct = await cartManagerMDB.addProductToCart(cid, pid, amount)
+        res.send({
+            status: 'success',
+            payload: updateProduct
+        })
+    } catch (error) {
+        res.status(500).send({
+            status: "error",
+            error: error.message
+        })
+    }
+})
+
+router.delete('/:cid/product/:pid', async(req,res)=>{
+    try {
+        const {cid, pid} = req.params
+        const deletedProduct = await cartManagerMDB.deleteProductFromCart(cid, pid)
+        res.send({
+            status: 'success',
+            newCart: deletedProduct
+        })
+    } catch (error) {
+        res.status(500).send({
+            status: "error",
+            error: error.message
+        })
+    }
+})
+
+router.delete('/:cid', async(req,res)=>{
+    try {
+        const { cid }= req.params
+        const result = await cartManagerMDB.deleteAllProducts(cid)
+        res.send({
+            status: 'success',
+            payload: result
+        })
+    } catch (error) {
+        res.status(500).send({
+            status: "error",
+            error: error.message
+        })
+    }
 })
 
 module.exports = router

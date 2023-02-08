@@ -14,8 +14,8 @@ body{
     justify-content: center;
 }
 
-#product-item{
-    background-color: #ebebeb;
+.product-item{
+    background-color: #ffffff;
     padding: 0.5rem;
     min-width: 10rem;
     max-width: 15rem;
@@ -54,4 +54,12 @@ body{
 
 #no-image{
     color: #555;
+}
+
+#see-cart-button{
+    display: block;
+    margin: 1rem auto;
+    padding: 1rem;
+    background-color: #87bebe;
+    border: 1px solid black;
 }
