@@ -4,7 +4,7 @@ const removeProduct = async (event) =>{
     await fetch(`/api/carts/${cartId}/product/${productId}`, {
         method: 'DELETE'
     })
-    .then(alert('item deleted from cart'))
+    .then(alert('item eliminado del carrito'))
     .then(window.location.href = window.location.href)
 }
 

@@ -3,27 +3,40 @@ const chatModel = require('../../dao/models/chatModel')
 const productModel = require('../../dao/models/productModel')
 const ProductManagerMDB = require('../../dao/mongoManagers/productManager')
 const CartManagerMDB = require('../../dao/mongoManagers/cartManager')
+const { sessionMiddleware } = require('../../middlewares/sessionMiddleware')
+const { authMiddleware } = require('../../middlewares/authMiddleware')
 
 const productMDBService = new ProductManagerMDB()
 const cartMDBService = new CartManagerMDB()
 const router = Router()
 
-router.get('/', async (req, res) => {
-    const products = await productModel.find().lean()
-    res.render('index', {
-        title: "E-commerce",
-        styles:"index.css",
-        products
+router.get('/', sessionMiddleware, (req,res) => {
+    res.redirect('/login')
+})
+
+router.get('/signup', sessionMiddleware, (req,res) => {
+    res.render('signup', {
+        title: 'Registro',
+        styles: 'signup.css'
     })
 })
 
-router.get('/products', async (req, res) => {
+router.get('/login', sessionMiddleware, (req, res)=>{
+    res.render('login', {
+        title: 'Inicio de sesión',
+        styles: 'login.css'
+    })
+})
+
+router.get('/products', authMiddleware, async (req, res) => {
     try {
+        const user = req.session.user
         const products = await productMDBService.getProducts(req.query)
         res.render('index', {
             title: "E-commerce",
             styles:"index.css",
-            products: products.docs
+            products: products.docs,
+            user: user
         })
     } catch (error) {
         res.status(500).send({

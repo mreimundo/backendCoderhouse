@@ -1,4 +1,9 @@
 <div>
+    <div class="welcome-box z-depth-2">
+        <h3 class="welcome-title">Welcome {{user.name}} {{user.lastName}} ({{user.role}})</h3>
+        <p class="user-email">{{user.email}}</p>
+        <p class="user-age">{{user.age}} years old</p>
+    </div>
     <h1 class="main-title">Nuestros productos</h1>
     <div id="product-list-container">
         {{#each products}}
@@ -14,8 +19,32 @@
                     <p id="no-image">no image</p>
                 {{/if}}
                 <p class="stock-tag">{{stock}} restantes</p>
-                <button id="add-to-cart-button" onclick="addToCart(event)">Add to cart</button>
+                <div class="item-counter-container">
+                    <button class="less-button-counter" onclick="decreaseQuantity(event)">-</button>
+                    <p class="counter">1</p>
+                    <button class="more-button-counter" onclick="increaseQuantity(event)">+</button>
+                </div>
+                <button id="add-to-cart-button" onclick="addToCart(event)">Agregar al carrito</button>
             </div>
         {{/each}}
     </div>
+    <div id="product-form">
+        <form action="/api/products" class="add-product-form" method="post" enctype="multipart/form-data">
+            <h4>Agregar producto</h4>
+            <input type="text" placeholder="Titulo" name="title">
+            <input type="text" placeholder="Descripcion" name="description" required>
+            <input type="text" placeholder="Codigo" name="code" required>
+            <input type="number" placeholder="Precio" name="price" required>
+            <input type="number" placeholder="Stock" name="stock" required>
+            <input type="text" placeholder="Categoria" name="category" required>
+            <input type="file" name="files" multiple>
+            <label>Disponible</label>
+            <input type="checkbox">
+            <input type="submit" id="submit-button" value="Enviar">
+        </form>
+    </div>
 </div>
+
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/statics/js/index.js"></script>

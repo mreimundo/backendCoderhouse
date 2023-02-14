@@ -63,3 +63,40 @@ body{
     background-color: #87bebe;
     border: 1px solid black;
 }
+
+.add-product-form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 20rem;
+    background-color: #577bf3;
+    margin: 2rem auto;
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+
+.add-product-form input{
+    margin: 0.3rem 0.5rem;
+    width: 15rem;
+    padding: 0.5rem;
+    border-radius: 3px;
+}
+
+#submit-button:hover {
+    border: 2px solid rgb(113, 113, 166);
+    cursor:pointer;
+}
+
+#input-status{
+    display: flex;
+    margin: 0 auto;
+}
+
+#input-status label {
+    color: 'black !important';
+}
+
+#input-status input {
+    opacity: 1;
+    margin-left: -8.5rem;
+}

@@ -1,5 +1,5 @@
 const { Router } = require('express')
-const CartManager = require('../../dao/fsManagers/CartManager')
+const CartManager = require('../../dao/fsManagers/cartManager')
 const CartManagerMDB = require('../../dao/mongoManagers/cartManager')
 
 const router = Router()
@@ -38,11 +38,26 @@ router.get('/:cid',async (req, res) =>{
     }
 })
 
+router.post('/', async(req, res)=>{
+    try {
+        const addCart = await cartManagerMDB.addCart()
+        res.send({
+            status: 'success',
+            cart: addCart
+        })
+    } catch (error) {
+        res.status(500).send({
+            status: "error",
+            error: error.message
+        })
+    }
+})
+
 router.post('/:cid/product/:pid', async(req,res)=>{
     try {
-        const cartId = req.params.cid
-        const productId = req.params.pid
-        const addProduct = await cartManagerMDB.addProductToCart(cartId, productId)
+        const {cid, pid} = req.params
+        const amount = +req.body.amount
+        const addProduct = await cartManagerMDB.addProductToCart(cid, pid, amount)
         res.send({
             status: 'success',
             newCart: addProduct
@@ -55,13 +70,6 @@ router.post('/:cid/product/:pid', async(req,res)=>{
     }
 })
 
-router.post('/', async(req, res)=>{
-    const addCart = await cartManagerMDB.addCart()
-    res.send({
-        status: 'success',
-        cart: addCart
-    })
-})
 
 router.put('/:cid', async (req, res) =>{
     const { cid } = req.params

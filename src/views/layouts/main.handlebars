@@ -9,17 +9,22 @@
     <title>{{title}}</title>
 </head>
 <body>
-    <nav>
-        <div class="nav-wrapper container">
-        <a href="#" class="brand-logo">E-commerce</a>
+    <nav style="background-color: rgb(72, 82, 192) !important">
+        <div class="nav-wrapper container" style="background-color: rgb(72, 82, 192) !important">
+        <a href="/products" class="brand-logo">Coderhouse back</a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a href="/">Inicio</a></li>
+            <li><a href="/products">Inicio</a></li>
             <li><a href="/chat">Chat</a></li>
+            {{#if user}}
+                <li><a id="logout-button" style="background-color: rgb(153, 26, 81)">Cerrar sesión</a></li>
+            {{/if}}
+            <li style="background-color: rgb(37, 142, 117)"><a href="/signup">Registro</a></li>
         </ul>
         </div>
     </nav>
     {{{body}}}
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="statics/js/main.js"></script>
 </body>
 </html>

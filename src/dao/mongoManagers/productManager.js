@@ -2,9 +2,29 @@ const productModel = require('../models/productModel')
 
 class ProductManagerMDB {
     
-    async getProducts() {
+    async getProducts({limit, page, query, sort}) {
         try {
-            const products = await productModel.find()
+            let filter
+            
+            if(!query){
+                filter =  {}
+            }else if(query == 'true'){
+                filter = {status: true}
+            }else if(query== 'false'){
+                filter = {status: false}
+            }else{
+                filter = {category: query}
+            }
+
+            const options = {
+                sort: (sort ? {price: sort} : {}),
+                limit: limit || 10,
+                page: page || 1,
+                lean: true
+            }
+
+            const products = await productModel.paginate(filter,options)
+
             return products
         } catch (error) {
             throw new Error(error.message)
@@ -43,7 +63,7 @@ class ProductManagerMDB {
     async updateProduct(id, product) {
         try{
             const updatedProduct = await productModel.updateOne({_id: id}, product)
-            console.log(`${product.title} modified`)
+            console.log(`${product.title ? product.title : 'product'} modified`)
             return updatedProduct
         }
         catch(error){

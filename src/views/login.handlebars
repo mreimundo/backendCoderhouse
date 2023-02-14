@@ -1,0 +1,22 @@
+<h1 class="login-title">Iniciar sesión</h1>
+
+<div class="row container login-form-container">
+    <form class="col s12" action="/api/session/login" method="post">
+        <div class="row">
+            <div class="input-field col s12">
+                <input type="email" class="validate" name="email">
+                <label for="disabled">Email</label>
+                <span class="helper-text" data-error="Introduce a valid email" data-success="Formato correcto"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <input type="password" class="validate" name="password">
+                <label for="password">Contraseña</label>
+            </div>
+        </div>
+        <input class="waves-effect waves-light btn-small register-submit" type="submit" value="Ingresar">
+    </form>
+</div>
+
+<a href="/signup" class="signup-anchor">Eres nuevo? Registrate!</a>

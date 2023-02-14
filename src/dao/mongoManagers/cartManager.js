@@ -36,16 +36,12 @@ class CartManagerMDB {
     async addProductToCart(cartId, productId, amount){
         try {
             let cart = await this.getCartById(cartId)
-            const product = await productModel.findById(productId)
+            const Originalproduct = await productModel.findById(productId)
             const productToAdd = cart.products.findIndex(product => product.product._id == productId)
-            if(!amount){
-                if(productToAdd < 0){
-                    cart.products.push({product: productId})
-                }else{
-                    cart.products[productToAdd].quantity ++
-                }
+            if(productToAdd < 0){
+                cart.products.push({product: productId, quantity: amount})
             }else{
-                cart.products[productToAdd].quantity = amount
+                cart.products[productToAdd].quantity += amount
             }
             let result = await cartModel.updateOne({_id:cartId}, cart) 
             return result          
@@ -69,16 +65,12 @@ class CartManagerMDB {
     async deleteProductFromCart(cartId, productId){
         try {
             const cart = await this.getCartById(cartId)
-            // @ts-ignore
             const productToDelete = cart.products.find(product => product.product._id == productId)
-            // @ts-ignore
             const index = cart.products.indexOf(productToDelete)
             if(index < 0){
                 throw new Error('Product not found')
             }
-            // @ts-ignore
             cart.products.splice(index, 1)
-            // @ts-ignore
             const result = cartModel.updateOne({_id:cartId}, cart)
             return result
         } catch (error) {
@@ -89,9 +81,7 @@ class CartManagerMDB {
     async deleteAllProducts(cartId){
         try {
             const cart = await this.getCartById(cartId)
-            // @ts-ignore
             cart.products = []
-            // @ts-ignore
             const result = cartModel.updateOne({_id:cartId}, cart)
             return result
         } catch (error) {
