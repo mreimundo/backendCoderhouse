@@ -8,6 +8,7 @@ const session = require('express-session')
 const MongoStore = require('connect-mongo')
 const passport = require('passport')
 const initializePassport = require('./config/passportConfig.js')
+const cookieParser = require('cookie-parser')
 require('./config/dbConfig')
 
 const PORT = 8080
@@ -16,6 +17,7 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended:true }))
 app.use('/statics', express.static(path.resolve(__dirname, '../public')))
+app.use(cookieParser())
 app.use(session({
     name: 'session',
     secret: 'top-secret',

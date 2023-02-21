@@ -7,6 +7,16 @@ body{
     font-size: 3rem;
 }
 
+.user-role{
+    color: #666;
+}
+
+.github-user-tag, .user-age{
+    margin: 0 0.5rem;
+    font-size: 0.8rem;
+    color: #555;
+}
+
 #product-list-container{
     display: flex;
     gap: 1rem;
