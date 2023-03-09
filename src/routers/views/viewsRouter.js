@@ -1,16 +1,17 @@
 const { Router } = require('express')
 const chatModel = require('../../dao/models/chatModel')
-const productModel = require('../../dao/models/productModel')
 const ProductManagerMDB = require('../../dao/mongoManagers/productManager')
 const CartManagerMDB = require('../../dao/mongoManagers/cartManager')
 const { sessionMiddleware } = require('../../middlewares/sessionMiddleware')
 const { authMiddleware } = require('../../middlewares/authMiddleware')
+const passportCall = require('../../middlewares/passportMiddleware')
+
 
 const productMDBService = new ProductManagerMDB()
 const cartMDBService = new CartManagerMDB()
 const router = Router()
 
-router.get('/', sessionMiddleware, (req,res) => {
+router.get('/', (req,res) => {
     res.redirect('/login')
 })
 
@@ -46,15 +47,16 @@ router.get('/products', authMiddleware, async (req, res) => {
     }
 })
 
-router.get('/cart/:cid', async (req, res) => {
-    const cartId = req.params.cid 
+router.get('/cart/:cid', authMiddleware, passportCall('jwt'), async (req, res) => {
+    const cartId = req.params.cid
+    const user = req.user
     try {
         const cart = await cartMDBService.getCartById(cartId)
         res.render('cart', {
             title: "Cart",
             styles:"cart.css",
-            products: cart.products,
-            cartId: cart._id
+            user,
+            cart
         })
     } catch (error) {
         res.status(500).send({
@@ -64,7 +66,7 @@ router.get('/cart/:cid', async (req, res) => {
     }
 })
 
-router.get('/chat', async (req,res)=>{
+router.get('/chat', authMiddleware, passportCall('jwt'), async (req,res)=>{
     const messages = await chatModel.find().lean()
     res.render('chat', {
         title: "Meta new chat!",

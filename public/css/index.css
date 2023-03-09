@@ -2,13 +2,35 @@ body{
     background-color: #dfdfdf;
 }
 
-.main-title{
+.welcome-box{
+    background-color: #dbb37e;
+    margin: 2rem;
+    padding: 1.5rem;
+    border-radius: 25px;
+    width: fit-content;
+}
+
+.welcome-title{
+    font-size: 2rem;
+    margin: 0.5rem;
+}
+
+.user-role{
+    color: #666;
+}
+
+.main-title {
     text-align: center;
     font-size: 3rem;
 }
 
 .user-role{
     color: #666;
+}
+
+.user-email{
+    color: #333;
+    margin: 0.5rem;
 }
 
 .github-user-tag, .user-age{

@@ -1,36 +1,28 @@
 const productItem = document.querySelector('.product-item')
 const addToCartButton = document.getElementById('add-to-cart-button')
+const seeCartButton = document.querySelector('.see-cart-button')
 
-let currentCart;
+const cartId = seeCartButton.id
 
-const addToCart = async (event) =>{
-    if(!currentCart){
-        await fetch('/api/carts',{method: 'POST'})
-        .then(response => response.json())
-        .then(data => currentCart = data.cart._id);
-    }
-    productId = event.target.parentNode.getAttribute('id')
-
+const addToCart = async (event) => {
+    const productId = event.target.parentNode.getAttribute('id')
     const quantity = event.target.previousElementSibling.children[1].textContent
-    fetch(`/api/carts/${currentCart}/product/${productId}`, {
+    await fetch(`/api/carts/${cartId}/product/${productId}`, {
         headers: {
-            'Content-Type': 'application/json' 
+            'Content-Type': 'application/json'
         },
         method: 'POST',
-        body: JSON.stringify({quantity})
+        body: JSON.stringify({quantity}),
     })
-    .then(alert('Item agregado al carrito'))
+    .then(() => alert('Item añadido al carrito!'))
 
-    //reseteo cantidad
+    //reset cantidad
     event.target.previousElementSibling.children[1].textContent = 1
 }
 
 
 const seeCart = async (event) =>{
-    if(!currentCart){
-        return alert('Carrito vacio')
-    }
-    window.location.href = `/cart/${currentCart}`
+    window.location.href = `/cart/${cartId}`
 }
 
 
@@ -42,6 +34,9 @@ const decreaseQuantity = (event) =>{
 }
 
 const increaseQuantity = (event) =>{
+    const stock = +event.target.parentNode.previousElementSibling.textContent.split(' ')[0]
     const quantity = + event.target.previousElementSibling.textContent
-    event.target.previousElementSibling.textContent = quantity + 1
+    if(quantity < stock) {
+        event.target.previousElementSibling.textContent = quantity + 1
+    }
 }

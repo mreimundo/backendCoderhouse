@@ -2,11 +2,13 @@ const express = require('express')
 const apiRoutes = require('./routers/appRouters.js')
 const path = require('path')
 const handlebars = require('express-handlebars')
+const helpers = require('handlebars-helpers')
 const viewsRoutes = require('./routers/views/viewsRouter.js')
 const { Server } = require('socket.io')
 const session = require('express-session')
-const MongoStore = require('connect-mongo')
+const { logGreen, logCyan, logRed } = require('./utils/consoleUtils')
 const passport = require('passport')
+const flash = require('connect-flash')
 const initializePassport = require('./config/passportConfig.js')
 const cookieParser = require('cookie-parser')
 require('./config/dbConfig')
@@ -18,24 +20,10 @@ app.use(express.json())
 app.use(express.urlencoded({ extended:true }))
 app.use('/statics', express.static(path.resolve(__dirname, '../public')))
 app.use(cookieParser())
-app.use(session({
-    name: 'session',
-    secret: 'top-secret',
-    cookie: {
-        maxAge: 60000 * 60,
-        httpOnly: true
-    },
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({
-        mongoUrl: "mongodb+srv://admin:admin@ecommerce.ua2jv9s.mongodb.net/?retryWrites=true&w=majority",
-        ttl: 3600
-    })
-}))
-
 initializePassport()
 app.use(passport.initialize())
-app.use(passport.session())
+app.use(flash())
+
 app.use('/api', apiRoutes)
 app.use('/', viewsRoutes)
 
@@ -43,11 +31,27 @@ app.engine('handlebars', handlebars.engine())
 app.set('views', path.resolve(__dirname, './views'));
 app.set('view engine', 'handlebars');
 
-const httpServer = app.listen(PORT, ()=>{
-    console.log('Corriendo en el puerto => ', PORT)
-})
+const math = helpers.math();
+app.engine('handlebars', handlebars.engine({
+    helpers: {
+        math
+    }
+}))
 
-const io = new Server(httpServer)
+
+const server = app.listen(PORT, "127.0.0.1", () => {
+    const host = server.address().address;
+    const port = server.address().port;
+    logGreen(`Server is up and running on http://${host}:${port}`);
+});
+
+server.on("error", (error) => {
+    logRed("There was an error starting the server");
+    console.log(error);
+});
+
+
+const io = new Server(server)
 
 io.on('connection', (socket)=>{
     console.log("Nuevo cliente conectado");

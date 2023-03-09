@@ -1,92 +1,66 @@
-const cartModel = require('../models/cartModel')
-const productModel = require('../models/productModel')
-
+const cartModel = require('../models/cartModel.js')
+const productModel = require('../models/productModel.js')
+const { logCyan } = require('../../utils/consoleUtils.js')
+const { HttpError } = require('../../utils/errorUtils.js')
+const HTTP_STATUS = require('../../constants/apiConstants.js')
 class CartManagerMDB {
 
     async getCarts() {
-        try{
-            const carts = await cartModel.find()
-            return carts
-        }
-        catch(error){
-            throw new Error(error.message)
-        }
+        const carts = await cartModel.find()
+        return carts
     }
 
     async getCartById(id) {
-        try{
-            const cart = await cartModel.findById(id).lean()
-            return cart
-        }
-        catch(error){
-            throw new Error(error.message)
-        }
+        const cart = await cartModel.findById(id).lean()
+        return cart
     }
 
     async addCart(){
-        try{
-            const newCart = await cartModel.create({})
-            return newCart
-        }
-        catch(error){
-            throw new Error(error.message)
-        }
+        const newCart = await cartModel.create({})
+        logCyan('New cart created')
+        return newCart
     }
 
-    async addProductToCart(cartId, productId, amount){
-        try {
-            let cart = await this.getCartById(cartId)
-            const Originalproduct = await productModel.findById(productId)
-            const productToAdd = cart.products.findIndex(product => product.product._id == productId)
-            if(productToAdd < 0){
-                cart.products.push({product: productId, quantity: amount})
-            }else{
-                cart.products[productToAdd].quantity += amount
+    async addProductToCart(cartId, productId, quantity){
+        const updatedCart = await cartModel.findByIdAndUpdate(cartId, {
+            $push: {
+                products: {
+                    product: productId,
+                    quantity: quantity
+                }
             }
-            let result = await cartModel.updateOne({_id:cartId}, cart) 
-            return result          
-        } catch (error) {
-            throw new Error(error.message)
-        }
+        })
+        logCyan(`product ${productId} added to cart`)
+        return updatedCart
     }
 
     async updateProducts (cartId, newProducts){
-        try {
-            const cart = await this.getCartById(cartId)
-            cart.products = newProducts
-            await cartModel.updateOne({_id:cartId}, cart)
-            return newProducts
-            
-        } catch (error) {
-            console.log(error);
-        }
+        const cart = await this.getCartById(cartId)
+        cart.products = newProducts
+        await cartModel.updateOne({_id:cartId}, cart)
+        logCyan(`product ${productId} updated`)
+        return newProducts
     }
 
     async deleteProductFromCart(cartId, productId){
-        try {
-            const cart = await this.getCartById(cartId)
-            const productToDelete = cart.products.find(product => product.product._id == productId)
-            const index = cart.products.indexOf(productToDelete)
-            if(index < 0){
-                throw new Error('Product not found')
-            }
-            cart.products.splice(index, 1)
-            const result = cartModel.updateOne({_id:cartId}, cart)
-            return result
-        } catch (error) {
-            throw new Error(error.message)
+        const cart = await this.getCartById(cartId)
+        const productToDelete = cart.products.find(product => product.product._id == productId)
+        const index = cart.products.indexOf(productToDelete)
+        if(index < 0){
+            throw new HttpError(HTTP_STATUS.NOT_FOUND, 'Product not found')
         }
+        cart.products.splice(index, 1)
+        const result = cartModel.updateOne({_id:cartId}, cart)
+        logCyan(`product ${productId} deleted from cart`)
+        return result
     }
 
     async deleteAllProducts(cartId){
-        try {
-            const cart = await this.getCartById(cartId)
-            cart.products = []
-            const result = cartModel.updateOne({_id:cartId}, cart)
-            return result
-        } catch (error) {
-            throw new Error(error.message)
-        }
+        const cart = await this.getCartById(cartId)
+        cart.products = []
+        const result = cartModel.updateOne({_id:cartId}, cart)
+        logCyan('Cart empty')
+        return result
     }
 }
 
