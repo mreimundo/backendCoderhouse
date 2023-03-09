@@ -79,7 +79,7 @@ const initializePassport = () =>{
         async (accessToken, refreshToken, profile, done)=>{
             try {
                 const userData = profile._json
-                const user = await usersDao.findOne({ email: userData.email})
+                const user = await usersDao.getByEmail(userData.email)
                 if(!user){
                     const newUser = {
                         name: userData.name.split(' ')[0],
@@ -90,7 +90,7 @@ const initializePassport = () =>{
                         githubLogin: userData.login,
                         cart: cart._id
                     }
-                    const response = usersDao.create(newUser)
+                    const response = usersDao.addUser(newUser)
                     const userResponse = response._doc
                     done(null, userResponse)
                     return
@@ -123,7 +123,7 @@ passport.serializeUser((user, done) => {
 
 
 passport.deserializeUser(async (id, done) => {
-    const user = await usersDao.findById(id);
+    const user = await usersDao.getById(id);
     done(null, user);
 });
 
