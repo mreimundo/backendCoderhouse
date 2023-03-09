@@ -15,8 +15,8 @@ class SessionsController{
             }
             const access_token = generateToken(user);
             res.cookie(SESSION_KEY, access_token, {
-              maxAge: 60 * 60 * 24 * 1000,
-              httpOnly: true
+                maxAge: 60 * 60 * 24 * 1000,
+                httpOnly: true
             });
             const response = apiSuccessResponse("User logged in successfully!");
             // return res.json(response);

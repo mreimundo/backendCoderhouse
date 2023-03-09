@@ -1,5 +1,5 @@
-const SECRET_KEY = 'password123'
-const SESSION_KEY = 'mysession'
+const SECRET_KEY = 'top-secret'
+const SESSION_KEY = 'session'
 
 module.exports = {
     SECRET_KEY,

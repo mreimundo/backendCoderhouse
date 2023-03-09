@@ -1,11 +1,10 @@
 const { Router } = require('express')
-const { roleMiddleware } = require('../../middlewares/roleMiddleware')
 const SessionsController = require('../../controllers/sessionsController')
 const passportCall = require('../../middlewares/passportMiddleware')
 
 const router = Router()
 
-router.post('/register',
+router.post('/signup',
     passportCall('register', {failureRedirect: '/api/session/failRegister', failureFlash: true}),
     (req, res)=>res.redirect('/login')
 )

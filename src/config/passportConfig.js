@@ -4,7 +4,7 @@ const local = require('passport-local')
 const jwt = require('passport-jwt')
 const github = require('passport-github2')
 const CartManagerMDB = require('../dao/mongoManagers/cartManager')
-const UserManagerMDB = require('../dao/mongoManagers/productManager')
+const UserManagerMDB = require('../dao/mongoManagers/userManager')
 const { logRed } = require('../utils/consoleUtils')
 const { cookieExtractor } = require('../utils/sessionUtils')
 const { SECRET_KEY } = require('../constants/sessionConstants')
@@ -61,7 +61,7 @@ const initializePassport = () =>{
                     return done(null, false, 'user not found')
                 }
                 if(!isValidPassword(user, password)){
-                    return done(null, false, 'wrong user or password')
+                    return done(null, false, 'wrong password')
                 }
                 return done(null, user)
             } catch (error) {

@@ -5,11 +5,10 @@ const handlebars = require('express-handlebars')
 const helpers = require('handlebars-helpers')
 const viewsRoutes = require('./routers/views/viewsRouter.js')
 const { Server } = require('socket.io')
-const session = require('express-session')
-const { logGreen, logCyan, logRed } = require('./utils/consoleUtils')
+const { logGreen, logRed } = require('./utils/consoleUtils')
 const passport = require('passport')
-const flash = require('connect-flash')
 const initializePassport = require('./config/passportConfig.js')
+const flash = require('connect-flash')
 const cookieParser = require('cookie-parser')
 require('./config/dbConfig')
 
@@ -27,9 +26,6 @@ app.use(flash())
 app.use('/api', apiRoutes)
 app.use('/', viewsRoutes)
 
-app.engine('handlebars', handlebars.engine())
-app.set('views', path.resolve(__dirname, './views'));
-app.set('view engine', 'handlebars');
 
 const math = helpers.math();
 app.engine('handlebars', handlebars.engine({
@@ -38,6 +34,8 @@ app.engine('handlebars', handlebars.engine({
     }
 }))
 
+app.set('views', path.resolve(__dirname, './views'));
+app.set('view engine', 'handlebars');
 
 const server = app.listen(PORT, "127.0.0.1", () => {
     const host = server.address().address;
@@ -53,7 +51,7 @@ server.on("error", (error) => {
 
 const io = new Server(server)
 
-io.on('connection', (socket)=>{
+io.on('connection', (socket) => {
     console.log("Nuevo cliente conectado");
     app.set('socket', socket)
     app.set('io', io)

@@ -29,9 +29,9 @@ router.get('/login', sessionMiddleware, (req, res)=>{
     })
 })
 
-router.get('/products', authMiddleware, async (req, res) => {
+router.get('/products', authMiddleware, passportCall('jwt'), async (req, res) => {
+    const user = req.session.user
     try {
-        const user = req.session.user
         const products = await productMDBService.getProducts(req.query)
         res.render('index', {
             title: "E-commerce",
