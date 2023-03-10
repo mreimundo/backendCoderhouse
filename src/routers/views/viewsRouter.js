@@ -30,7 +30,7 @@ router.get('/login', sessionMiddleware, (req, res)=>{
 })
 
 router.get('/products', authMiddleware, passportCall('jwt'), async (req, res) => {
-    const user = req.session.user
+    const user = req.user
     try {
         const products = await productMDBService.getProducts(req.query)
         res.render('index', {
