@@ -1,10 +1,12 @@
 const { Router } = require('express')
+const uploader = require('../../utils/multerUtils')
 const SessionsController = require('../../controllers/sessionsController')
 const passportCall = require('../../middlewares/passportMiddleware')
 
 const router = Router()
 
 router.post('/signup',
+    uploader.single('file'),
     passportCall('register', {failureRedirect: '/api/session/failRegister', failureFlash: true}),
     (req, res)=>res.redirect('/login')
 )

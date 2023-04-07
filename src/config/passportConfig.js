@@ -3,14 +3,13 @@ const passport = require('passport')
 const local = require('passport-local')
 const jwt = require('passport-jwt')
 const github = require('passport-github2')
-const CartManagerMDB = require('../dao/mongoManagers/cartManager')
-const UserManagerMDB = require('../dao/mongoManagers/userManager')
+const getDaos = require('../dao/misc/factory')
+const { SECRET_KEY, ADMIN_EMAIL, ADMIN_PASSWORD } = require("../config/enviroment.config.js")
+
 const { logRed } = require('../utils/consoleUtils')
 const { cookieExtractor } = require('../utils/sessionUtils')
-const { SECRET_KEY } = require('../constants/sessionConstants')
 
-const usersDao = new UserManagerMDB()
-const cartsDao = new CartManagerMDB()
+const { cartsDao, usersDao } = getDaos()
 
 const LocalStrategy = local.Strategy
 const GithubStrategy = github.Strategy
@@ -31,7 +30,7 @@ const initializePassport = () =>{
             }
             try {
                 const user = await usersDao.getByEmail(username)
-                const cart = await cartsDao.addCart()
+                const cart = await cartsDao.add()
                 if(user){
                     logRed('User already exist');
                     return done(null, false, 'User already exist')
@@ -56,12 +55,23 @@ const initializePassport = () =>{
         {usernameField: 'email'},
         async(username, password, done) =>{
             try {
+                if(username === ADMIN_EMAIL && password === ADMIN_PASSWORD){
+                    const user = {
+                        first_name: 'Admin',
+                        last_name: 'Coder',
+                        email: ADMIN_EMAIL,
+                        password: ADMIN_PASSWORD,
+                        role: 'admin',
+                        cart: 'un id'
+                    }
+                    return done(null, user)
+                }
                 const user = await usersDao.getByEmail(username)
                 if(!user){
                     return done(null, false, 'user not found')
                 }
                 if(!isValidPassword(user, password)){
-                    return done(null, false, 'wrong password')
+                    return done(null, false, 'wrong user or password')
                 }
                 return done(null, user)
             } catch (error) {

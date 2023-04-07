@@ -7,7 +7,7 @@ class ProductManager {
         this.filePath = path.resolve(__dirname,`../../files/${filename}`)
     }
 
-    async getProducts() {
+    async getAll() {
         try{
             if (existsSync(this.filePath)){
                 const products = await fs.readFile(this.filePath, 'utf-8')
@@ -20,14 +20,14 @@ class ProductManager {
             else return []
         }
         catch(error){
-            throw new Error('erorrrrrr')
+            throw new Error('An error has occurred')
         }
     }
 
-    async getProductById(id) {
+    async getById(id) {
         const idNumber = Number(id)
         try{
-            const savedProducts = await this.getProducts();
+            const savedProducts = await this.getAll();
             const selectedProduct = savedProducts.find(prod => prod.id === idNumber)
             if(!selectedProduct){
                 throw new Error('ERROR: no product matches the specified ID')
@@ -39,9 +39,9 @@ class ProductManager {
         }
     }
 
-    async addProduct(product) {
+    async add(product) {
         try{
-            const savedProducts = await this.getProducts()
+            const savedProducts = await this.getAll()
             const DuplicatedProduct = savedProducts.find(item => item.code == product.code)
             if (DuplicatedProduct){
                 throw new Error(`ERROR: Unable to add. The next code has been already added: ${product.code}`)
@@ -67,11 +67,11 @@ class ProductManager {
         }
     }
 
-    async updateProduct(id, product) {
+    async updateById(id, product) {
         const idNumber = Number(id)
         try{
-            const savedProducts = await this.getProducts()
-            const targetProduct = await this.getProductById(idNumber)
+            const savedProducts = await this.getAll()
+            const targetProduct = await this.getById(idNumber)
             const updatedProduct = {...targetProduct, ...product}
             const updatedList = savedProducts.map(prod =>{
                 if(prod.id === idNumber){
@@ -90,11 +90,11 @@ class ProductManager {
         }
     }
 
-    async deleteProduct(id) {
+    async delete(id) {
         const idNumber = Number(id)
         try{
-            const savedProducts = await this.getProducts();
-            const targetProduct = await this.getProductById(idNumber)
+            const savedProducts = await this.getAll();
+            const targetProduct = await this.getById(idNumber)
             const filteredList = savedProducts.filter(prod => prod.id !== idNumber)
             const productListString = JSON.stringify(filteredList, null, '\t')
             await fs.writeFile(this.filePath, productListString)

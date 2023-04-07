@@ -1,10 +1,9 @@
 const productModel = require('../models/productModel')
 const { logCyan, logYellow } = require('../../utils/consoleUtils')
-const HttpError = require('../../utils/errorUtils')
-const HTTP_STATUS = require('../../constants/apiConstants')
+
 class ProductManagerMDB {
     
-    async getProducts({limit, page, query, sort}) {
+    async getAll({limit, page, query, sort}) {
         let filter
         if(!query){
             filter =  {}
@@ -25,37 +24,34 @@ class ProductManagerMDB {
         return products
     }
 
-    async getProductById(id) {
-        const product = await productModel.findById(id)
-        if(!product){
-            throw new HttpError(HTTP_STATUS.NOT_FOUND, 'No product matches the specified ID')
-        }
+     async getById(pid) {
+        const product = await productModel.findById(pid)
         return product
     }
 
-    async addProduct(product) {
-        await productModel.create(product)
-        logCyan(`${product.title} added`)
+    async add(payload) {
+        await productModel.create(payload)
+        logCyan(`${payload.title} added`)
         const newProduct = {
-            status: product.status || true,
-            thumbnails: product.thumbnails || [],
-            ...product
+            status: payload.status || true,
+            thumbnails: payload.thumbnails || [],
+            ...payload
         }
         return newProduct
     }
 
-    async updateProduct(id, product) {
-        const updatedProduct = await productModel.updateOne({_id: id}, product)
-        logCyan(`${product.title ?? 'product'} modified`)
+    async updateById(pid, payload) {
+        const updatedProduct = await productModel.updateOne({_id: pid}, payload)
+        logCyan(`${payload.title ?? 'product'} modified`)
         return updatedProduct
     }
 
-    async deleteProduct(id) {
-        const deletedProduct = await productModel.deleteOne({_id: id})
+    async delete(pid) {
+        const deletedProduct = await productModel.deleteOne({_id: pid})
         logYellow(`product deleted`)
-        return deletedProduct
+        return deletedProduct   
     }
 
 }
 
-module.exports = ProductManagerMDB
+module.exports = {ProductManagerMDB}

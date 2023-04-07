@@ -1,4 +1,4 @@
-const { SESSION_KEY } = require('../constants/sessionConstants')
+const { SESSION_KEY } = require('../config/enviroment.config')
 
 const sessionMiddleware = async (req, res, next) => {
     const cookies = req.cookies

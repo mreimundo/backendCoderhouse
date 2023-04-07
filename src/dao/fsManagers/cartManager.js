@@ -7,7 +7,7 @@ class CartManager {
         this.path = path
     }
 
-    async getCarts() {
+    async getAll() {
         try{
             if (!existsSync(this.path)){
                 return []
@@ -24,9 +24,9 @@ class CartManager {
         }
     }
 
-    async getCartById(id) {
+    async getById(id) {
         try{
-            const savedCarts = await this.getCarts();
+            const savedCarts = await this.getAll();
             const selectedCart = savedCarts.find(cart => cart.id === id)
             if(!selectedCart){
                 return { error:'ERROR: no cart matches the specified ID' }
@@ -38,9 +38,9 @@ class CartManager {
         }
     }
 
-    async addCart(){
+    async add(){
         try{
-            const savedCarts = await this.getCarts()
+            const savedCarts = await this.getAll()
             const newId = savedCarts.length > 0 ? savedCarts[savedCarts.length -1 ].id + 1 : 1
             const newCart = {
                 id: newId,
@@ -57,9 +57,9 @@ class CartManager {
         }
     }
 
-    async addProduct(cartId, productId){
-        const allCarts = await this.getCarts()
-        const cart = await this.getCartById(cartId)
+    async addProductToCart(cartId, productId){
+        const allCarts = await this.getAll()
+        const cart = await this.getById(cartId)
         const cartIndex = allCarts.findIndex(item => item.id === cart.id)
         if(cart.error){
             return cart.error

@@ -10,9 +10,8 @@ const passport = require('passport')
 const initializePassport = require('./config/passportConfig.js')
 const flash = require('connect-flash')
 const cookieParser = require('cookie-parser')
-require('./config/dbConfig')
+const { PORT } = require('./config/enviroment.config')
 
-const PORT = 8080
 const app = express()
 
 app.use(express.json())
@@ -44,7 +43,7 @@ const server = app.listen(PORT, "127.0.0.1", () => {
 });
 
 server.on("error", (error) => {
-    logRed("There was an error starting the server");
+    logRed("An error has occurred while the server was starting");
     console.log(error);
 });
 
@@ -52,7 +51,7 @@ server.on("error", (error) => {
 const io = new Server(server)
 
 io.on('connection', (socket) => {
-    console.log("Nuevo cliente conectado");
+    console.log("New user connected");
     app.set('socket', socket)
     app.set('io', io)
     socket.on('login', user =>{
